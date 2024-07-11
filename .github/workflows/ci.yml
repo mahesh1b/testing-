@@ -1,0 +1,55 @@
+name: Build and Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'The environment to deploy to. Eg: sandbox, uat, production'
+        required: true
+        default: 'sandbox'
+        type: choice
+        options:
+          - sandbox
+          - uat
+          - production
+      application:
+        description: 'The application. Eg: GRITFINANCIAL, MYFORTUNA'
+        required: true
+        default: 'GRITFINANCIAL'
+        type: choice
+        options:
+          - GRITFINANCIAL
+          - MYFORTUNA
+env:
+  # Set the RUNS_ON environment variable based on the selected application
+  RUNS_ON: ${{ github.event.inputs.application == 'GRITFINANCIAL' && 'ubuntu-latest' || 'ubuntu-latest' }}
+
+jobs:
+  build:
+    runs-on: ${{ env.RUNS_ON }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set environment variables
+        id: duplo
+        run: |
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+          echo "APPLICATION=${{ github.event.inputs.application }}" >> $GITHUB_ENV
+
+      - name: Construct secret name
+        id: construct-secret-name
+        run: |
+          echo "TOKEN=${{ env.APPLICATION }}_${{ env.ENVIRONMENT }}_DUPLO_TOKEN" >> $GITHUB_ENV
+          echo "TENANT_ID=${{ env.APPLICATION }}_${{ env.ENVIRONMENT }}_TENANT_ID" >> $GITHUB_ENV
+          echo "URL=${{ env.APPLICATION }}_${{ env.ENVIRONMENT }}_HOST_URL" >> $GITHUB_ENV
+          echo "ECR_REPO=$(echo '${{ env.APPLICATION }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Use secrets
+        run: |
+          token="${{ secrets[env.TOKEN] }}"
+          echo "TOKEN value: $token"
+          tenant_id="${{ secrets[env.TENANT_ID] }}"
+          echo "TENANT_ID value: $tenant_id"
+          url="${{ secrets[env.URL] }}"
+          echo "URL value: $url"
