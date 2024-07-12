@@ -56,9 +56,10 @@ jobs:
     runs-on: ${{ github.event.inputs.application }}
     needs: build
     steps:
-      - name: Checkout
+      - name: print vars
         run: |
-          echo "${{ needs.build.outputs.duplo_token }}
-          echo "${{ needs.build.outputs.duplo_tenant_id }}
-          echo "${{ needs.build.outputs.duplo_host }}
-          echo "${{ needs.build.outputs.docker_repo }}
+          echo "${{ needs.build.outputs.duplo_token }}"
+          echo "${{ vars[format('{0}', needs.build.outputs.duplo_token)] }}"
+          echo "${{ needs.build.outputs.duplo_tenant_id }}"
+          echo "${{ needs.build.outputs.duplo_host }}"
+          echo "${{ needs.build.outputs.docker_repo }}"
