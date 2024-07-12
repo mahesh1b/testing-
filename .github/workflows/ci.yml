@@ -52,6 +52,6 @@ jobs:
           echo "URL value: ${{ steps.construct-secret-name.outputs.URL }}"
           echo "ECR_REPO value: ${{ steps.construct-secret-name.outputs.ECR_REPO }}"
       
-      # - name: Fetch secrets
-      #   run: |
-      #     echo "value=${{ secrets.$TOKEN }}"
+      - name: Fetch secrets
+        run: |
+          echo "value=${{ secrets.steps.construct-secret-name.outputs.ECR_REPO }}"
