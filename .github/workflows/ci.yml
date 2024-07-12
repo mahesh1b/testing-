@@ -20,13 +20,13 @@ on:
         options:
           - GRITFINANCIAL
           - MYFORTUNA
-env:
-  # Set the RUNS_ON environment variable based on the selected application
-  RUNS_ON: ${{ github.event.inputs.application == 'GRITFINANCIAL' && 'ubuntu-latest' || 'ubuntu-latest' }}
+# env:
+#   # Set the RUNS_ON environment variable based on the selected application
+#   RUNS_ON: ${{ github.event.inputs.application == 'GRITFINANCIAL' && 'ubuntu-latest' || 'ubuntu-latest' }}
 
 jobs:
   build:
-    runs-on: 'ubuntu-latest'
+    runs-on: ${{ github.event.inputs.application }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
