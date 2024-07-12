@@ -62,6 +62,6 @@ jobs:
     steps:
       - name: print vars
         run: |
-          echo "${{ needs.build.outputs.duplo_token }}""
+          echo "${{ needs.build.outputs.duplo_token }}"
           echo "${{ needs.build.outputs.duplo_tenant_id }}"
           echo "${{ needs.build.outputs.duplo_host }}"
