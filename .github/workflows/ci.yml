@@ -51,3 +51,7 @@ jobs:
           echo "TENANT_ID value: $TENANT_ID"
           echo "URL value: $URL"
           echo "ECR_REPO value: $ECR_REPO"
+      
+      - name: Fetch secrets
+        run: |
+          echo "value=${{ secrets.$TOKEN }}"
