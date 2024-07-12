@@ -47,18 +47,14 @@ jobs:
 
       - name: Set secret environment variables
         run: |
-          echo "TOKEN=${{ secrets[steps.construct-secret-name.outputs.TOKEN] }}" >> $GITHUB_ENV
-          echo "TENANT_ID=${{ secrets[steps.construct-secret-name.outputs.TENANT_ID] }}" >> $GITHUB_ENV
-          echo "URL=${{ secrets[steps.construct-secret-name.outputs.URL] }}" >> $GITHUB_ENV
-          echo "ECR_REPO=${{ secrets[steps.construct-secret-name.outputs.ECR_REPO] }}" >> $GITHUB_ENV
+          echo "duplo_token=${{ secrets[steps.construct-secret-name.outputs.TOKEN] }}" >> $GITHUB_ENV
+          echo "duplo_tenant_id=${{ secrets[steps.construct-secret-name.outputs.TENANT_ID] }}" >> $GITHUB_ENV
+          echo "duplo_host=${{ secrets[steps.construct-secret-name.outputs.URL] }}" >> $GITHUB_ENV
+          echo "repo_url=${{ secrets[steps.construct-secret-name.outputs.ECR_REPO] }}" >> $GITHUB_ENV
 
       - name: Use secrets
         run: |
-          echo "TOKEN value: $TOKEN"
-          echo "TENANT_ID value: $TENANT_ID"
-          echo "URL value: $URL"
-          echo "ECR_REPO value: $ECR_REPO"
-
-      - name: Fetch secrets
-        run: |
-          echo "ECR_REPO secret value: $ECR_REPO"
+          echo "duplo_token value: $duplo_token"
+          echo "duplo_tenant_id value: $duplo_tenant_id"
+          echo "duplo_host value: $duplo_host"
+          echo "duplo_host value: $repo_url"
