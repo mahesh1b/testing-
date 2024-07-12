@@ -45,13 +45,20 @@ jobs:
           echo "URL=${{ env.APPLICATION }}_${{ env.ENVIRONMENT }}_HOST_URL" >> $GITHUB_OUTPUT
           echo "ECR_REPO=$(echo '${{ env.APPLICATION }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
+      - name: Set secret environment variables
+        run: |
+          echo "TOKEN=${{ secrets[steps.construct-secret-name.outputs.TOKEN] }}" >> $GITHUB_ENV
+          echo "TENANT_ID=${{ secrets[steps.construct-secret-name.outputs.TENANT_ID] }}" >> $GITHUB_ENV
+          echo "URL=${{ secrets[steps.construct-secret-name.outputs.URL] }}" >> $GITHUB_ENV
+          echo "ECR_REPO=${{ secrets[steps.construct-secret-name.outputs.ECR_REPO] }}" >> $GITHUB_ENV
+
       - name: Use secrets
         run: |
-          echo "TOKEN value: ${{ steps.construct-secret-name.outputs.TOKEN }}"
-          echo "TENANT_ID value: ${{ steps.construct-secret-name.outputs.TENANT_ID }}"
-          echo "URL value: ${{ steps.construct-secret-name.outputs.URL }}"
-          echo "ECR_REPO value: ${{ steps.construct-secret-name.outputs.ECR_REPO }}"
-      
+          echo "TOKEN value: $TOKEN"
+          echo "TENANT_ID value: $TENANT_ID"
+          echo "URL value: $URL"
+          echo "ECR_REPO value: $ECR_REPO"
+
       - name: Fetch secrets
         run: |
-          echo "value=${{ secrets.steps.construct-secret-name.outputs.ECR_REPO }}"
+          echo "ECR_REPO secret value: $ECR_REPO"
