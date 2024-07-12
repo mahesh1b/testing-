@@ -27,6 +27,10 @@ on:
 jobs:
   build:
     runs-on: ${{ github.event.inputs.application }}
+    outputs:
+      duplo_token: ${{ steps.vars.outputs.duplo_token }}
+      duplo_tenant_id: ${{ steps.vars.outputs.duplo_tenant_id }}
+      duplo_host: ${{ steps.vars.outputs.duplo_host }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,11 +50,11 @@ jobs:
           echo "ECR_REPO=$(echo '${{ env.APPLICATION }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
       - name: Set secret environment variables
+        id: vars
         run: |
           echo "duplo_token=${{ vars[format('{0}', steps.construct-secret-name.outputs.TOKEN)] }}" >> $GITHUB_OUTPUT
           echo "duplo_tenant_id=${{ vars[format('{0}', steps.construct-secret-name.outputs.TENANT_ID)] }}" >> $GITHUB_OUTPUT
           echo "duplo_host=${{ vars[format('{0}', steps.construct-secret-name.outputs.URL)] }}" >> $GITHUB_OUTPUT
-          echo "docker_repo=${{ vars[format('{0}', steps.construct-secret-name.outputs.ECR_REPO)] }}" >> $GITHUB_OUTPUT
 
   deploy:
     runs-on: ${{ github.event.inputs.application }}
@@ -58,8 +62,6 @@ jobs:
     steps:
       - name: print vars
         run: |
-          echo "${{ needs.build.outputs.duplo_token }}"
-          echo "${{ vars[format('{0}', needs.build.outputs.duplo_token)] }}"
+          echo "${{ needs.build.outputs.duplo_token }}""
           echo "${{ needs.build.outputs.duplo_tenant_id }}"
           echo "${{ needs.build.outputs.duplo_host }}"
-          echo "${{ needs.build.outputs.docker_repo }}"
