@@ -47,7 +47,18 @@ jobs:
 
       - name: Set secret environment variables
         run: |
-          echo "${{ vars[format('{0}', steps.construct-secret-name.outputs.TOKEN)] }}"
-          echo "${{ env.APPLICATION }}_${{ env.ENVIRONMENT }}_TENANT_ID"
-          echo "${{ env.APPLICATION }}_${{ env.ENVIRONMENT }}_HOST_URL"
-          echo "$(echo '${{ env.APPLICATION }}' | tr '[:upper:]' '[:lower:]')"
+          echo "duplo_token=${{ vars[format('{0}', steps.construct-secret-name.outputs.TOKEN)] }}" >> $GITHUB_OUTPUT
+          echo "duplo_tenant_id=${{ vars[format('{0}', steps.construct-secret-name.outputs.TENANT_ID)] }}" >> $GITHUB_OUTPUT
+          echo "duplo_host=${{ vars[format('{0}', steps.construct-secret-name.outputs.URL)] }}" >> $GITHUB_OUTPUT
+          echo "docker_repo=${{ vars[format('{0}', steps.construct-secret-name.outputs.ECR_REPO)] }}" >> $GITHUB_OUTPUT
+
+  deploy:
+    runs-on: ${{ github.event.inputs.application }}
+    needs: build
+    steps:
+      - name: Checkout
+        run: |
+          echo "duplo_token=${{ needs.build.outputs.duplo_token }}
+          echo "duplo_tenant_id=${{ needs.build.outputs.duplo_tenant_id }}
+          echo "duplo_host=${{ needs.build.outputs.duplo_host }}
+          echo "docker_repo=${{ needs.build.outputs.docker_repo }}
