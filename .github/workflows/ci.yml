@@ -58,7 +58,7 @@ jobs:
     steps:
       - name: Checkout
         run: |
-          echo "duplo_token=${{ needs.build.outputs.duplo_token }}
-          echo "duplo_tenant_id=${{ needs.build.outputs.duplo_tenant_id }}
-          echo "duplo_host=${{ needs.build.outputs.duplo_host }}
-          echo "docker_repo=${{ needs.build.outputs.docker_repo }}
+          echo "${{ needs.build.outputs.duplo_token }}
+          echo "${{ needs.build.outputs.duplo_tenant_id }}
+          echo "${{ needs.build.outputs.duplo_host }}
+          echo "${{ needs.build.outputs.docker_repo }}
