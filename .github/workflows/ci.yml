@@ -6,12 +6,12 @@ on:
       environment:
         description: 'The environment to deploy to. Eg: sandbox, uat, production'
         required: true
-        default: 'sandbox'
+        default: 'SANDBOX'
         type: choice
         options:
-          - sandbox
-          - uat
-          - production
+          - SANDBOX
+          - UAT
+          - PRODUCTION
       application:
         description: 'The application. Eg: GRITFINANCIAL, MYFORTUNA'
         required: true
@@ -47,9 +47,7 @@ jobs:
 
       - name: Use secrets
         run: |
-          token="${{ secrets[env.TOKEN] }}"
-          echo "TOKEN value: $token"
-          tenant_id="${{ secrets[env.TENANT_ID] }}"
-          echo "TENANT_ID value: $tenant_id"
-          url="${{ secrets[env.URL] }}"
-          echo "URL value: $url"
+          echo "TOKEN value: $TOKEN"
+          echo "TENANT_ID value: $TENANT_ID"
+          echo "URL value: $URL"
+          echo "ECR_REPO value: $ECR_REPO"
