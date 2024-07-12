@@ -47,7 +47,7 @@ jobs:
 
       - name: Set secret environment variables
         run: |
-          echo "${{ secrets[format('{0}', steps.construct-secret-name.outputs.TOKEN)] }}"
+          echo "${{ vars[format('{0}', steps.construct-secret-name.outputs.TOKEN)] }}"
           echo "${{ env.APPLICATION }}_${{ env.ENVIRONMENT }}_TENANT_ID"
           echo "${{ env.APPLICATION }}_${{ env.ENVIRONMENT }}_HOST_URL"
           echo "$(echo '${{ env.APPLICATION }}' | tr '[:upper:]' '[:lower:]')"
