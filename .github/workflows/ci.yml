@@ -26,7 +26,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ github.event.inputs.application }}
+    runs-on: foo
     outputs:
       duplo_token: ${{ steps.vars.outputs.duplo_token }}
       duplo_tenant_id: ${{ steps.vars.outputs.duplo_tenant_id }}
@@ -57,8 +57,49 @@ jobs:
           echo "duplo_host=${{ vars[format('{0}', steps.construct-secret-name.outputs.URL)] }}" >> $GITHUB_OUTPUT
 
   deploy:
-    runs-on: ${{ github.event.inputs.application }}
+    runs-on: foo
     needs: build
+    steps:
+      - name: print vars
+        run: |
+          echo "${{ needs.build.outputs.duplo_token }}"
+          echo "${{ needs.build.outputs.duplo_tenant_id }}"
+          echo "${{ needs.build.outputs.duplo_host }}"
+
+  build_too:
+    runs-on: foo
+    outputs:
+      duplo_token: ${{ steps.vars.outputs.duplo_token }}
+      duplo_tenant_id: ${{ steps.vars.outputs.duplo_tenant_id }}
+      duplo_host: ${{ steps.vars.outputs.duplo_host }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set environment variables
+        id: duplo
+        run: |
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+          echo "APPLICATION=${{ github.event.inputs.application }}" >> $GITHUB_ENV
+
+      - name: Construct secret name
+        id: construct-secret-name
+        run: |
+          echo "TOKEN=${{ env.APPLICATION }}_${{ env.ENVIRONMENT }}_DUPLO_TOKEN" >> $GITHUB_OUTPUT
+          echo "TENANT_ID=${{ env.APPLICATION }}_${{ env.ENVIRONMENT }}_TENANT_ID" >> $GITHUB_OUTPUT
+          echo "URL=${{ env.APPLICATION }}_${{ env.ENVIRONMENT }}_HOST_URL" >> $GITHUB_OUTPUT
+          echo "ECR_REPO=$(echo '${{ env.APPLICATION }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
+      - name: Set secret environment variables
+        id: vars
+        run: |
+          echo "duplo_token=${{ vars[format('{0}', steps.construct-secret-name.outputs.TOKEN)] }}" >> $GITHUB_OUTPUT
+          echo "duplo_tenant_id=${{ vars[format('{0}', steps.construct-secret-name.outputs.TENANT_ID)] }}" >> $GITHUB_OUTPUT
+          echo "duplo_host=${{ vars[format('{0}', steps.construct-secret-name.outputs.URL)] }}" >> $GITHUB_OUTPUT
+
+  deploy_too:
+    runs-on: foo
+    needs: build_too
     steps:
       - name: print vars
         run: |
