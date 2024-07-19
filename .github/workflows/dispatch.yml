@@ -1,0 +1,29 @@
+name: Deploy to Sandbox on merge to main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-on-main:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch an event to trigger a deployment for Grit Sandbox
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: deployment_v2.yml
+          ref: main
+          inputs: '{ "application": "GRITFINANCIAL", "environment": "SANDBOX" }'
+          token: ${{ secrets.GH_TOKEN }}
+          repo: Grit-Financial/report-parser
+
+      - name: Dispatch an event to trigger a deployment for MyFortuna Sandbox
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: deployment_v2.yml
+          ref: main
+          inputs: '{ "application": "MYFORTUNA", "environment": "SANDBOX" }'
+          token: ${{ secrets.GH_TOKEN }}
+          repo: Grit-Financial/report-parser
